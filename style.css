@@ -1,0 +1,226 @@
+:root {
+    --primary-color: #8b4513; /* Tom de tinta marrom/terra */
+    --bg-color: #3a290f9c;      /* Altere este valor hexadecimal para a cor desejada */
+    --text-color: #2c2c2c;    /* Cor de nanquim/grafite */
+    --accent-color: #d32f2f;  /* Vermelho vibrante de tinta */
+    --play-text-color: #fff;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Textura sutil de papel - altere a cor #e5d9c9 para mudar a cor dos pontos */
+    background-image: radial-gradient(#f4e2447a 1px, transparent 1px);
+    background-size: 30px 30px;
+    overflow-x: hidden;
+}
+
+/* Camada da Mancha de Tinta */
+#ink-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.ink-blob {
+    position: absolute;
+    background-color: var(--text-color);
+    filter: url(#ink-distort) blur(2px);
+    animation: ink-reveal 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Mancha principal */
+.main-blob {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* Respingos aleatórios */
+.splat {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.splat-1 { top: 10%; left: 15%; width: 120px; height: 120px; animation-delay: 0.1s; }
+.splat-2 { top: 70%; left: 80%; width: 180px; height: 160px; animation-delay: 0.2s; }
+.splat-3 { top: 20%; left: 75%; width: 80px; height: 80px; animation-delay: 0.05s; }
+.splat-4 { top: 80%; left: 20%; width: 100px; height: 100px; animation-delay: 0.15s; }
+
+/* Estilo do Placeholder do Jogo */
+.game-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-placeholder::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('imagens/screenshot.png');
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px);
+    transform: scale(1.1); /* Aumenta um pouco para remover bordas brancas do blur */
+    z-index: 0;
+}
+
+.paint-button {
+    position: relative;
+    z-index: 1;
+    padding: 20px 40px;
+    font-size: 1.8rem;
+    font-family: inherit;
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--accent-color);
+    border: none;
+    cursor: pointer;
+    /* Formato de pincelada */
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.paint-button:hover {
+    transform: scale(1.05) rotate(-1deg);
+    background-color: #b71c1c;
+}
+
+.play-text {
+    position: relative;
+    z-index: 1;
+    margin-top: 15px;
+    color: var(--play-text-color);
+    font-style: italic;
+    opacity: 0.5;
+}
+
+@keyframes ink-reveal {
+    0% { clip-path: circle(100% at 50% 50%); }
+    100% { 
+        clip-path: circle(0% at 50% 50%);
+        opacity: 0; 
+    }
+}
+
+header {
+    width: 100%;
+    padding: 2rem;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, transparent 100%);
+}
+
+.company-logo {
+    max-width: 250px;
+    margin-bottom: 1rem;
+    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
+}
+
+.game-logo {
+    max-width: 300px;
+    width: 90%;
+    height: auto;
+    margin: 0.5rem 0;
+    filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.2));
+}
+
+.game-container {
+    width: 100%;
+    max-width: 1024px;
+    aspect-ratio: 16 / 9;
+    background-color: #1a1a1a;
+    /* Borda irregular estilo pintura */
+    border: 8px solid var(--primary-color);
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+    box-shadow: 5px 10px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    position: relative;
+}
+
+.game-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.fullscreen-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    width: 45px;
+    height: 45px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: none; /* Escondido até o jogo carregar */
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    /* Estilo de mancha de tinta irregular */
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.fullscreen-btn:hover {
+    transform: scale(1.2) rotate(8deg);
+    background-color: #b71c1c;
+}
+
+.controls-info {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid var(--primary-color);
+    border-radius: 10px 25px 15px 30px;
+    width: 90%;
+    max-width: 1024px;
+    box-sizing: border-box;
+}
+
+.itch-embed {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    border: 2px solid var(--primary-color);
+    border-radius: 15px 10px 30px 20px;
+    width: 90%;
+    max-width: 1024px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.itch-embed h3 {
+    margin-top: 0;
+}
+
+footer {
+    margin-top: 3rem;
+    padding: 2rem;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}

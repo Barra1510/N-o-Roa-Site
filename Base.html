@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Não Roa! - GB Studios</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="imagens/Não Roa Logo temp yellow.png" type="image/png">
+</head>
+<body>
+    <!-- Elemento de áudio para o efeito de splash de tinta -->
+    <audio id="splash-sound" src="audios/splash.mp3" preload="auto"></audio>
+
+    <!-- Camada de animação de tinta com respingos -->
+    <div id="ink-overlay">
+        <div class="ink-blob main-blob"></div>
+        <div class="ink-blob splat splat-1"></div>
+        <div class="ink-blob splat splat-2"></div>
+        <div class="ink-blob splat splat-3"></div>
+        <div class="ink-blob splat splat-4"></div>
+    </div>
+
+    <header>
+        <img src="imagens\LOGO GB STUDIOS PNG.png" alt="GB Studios" class="company-logo">
+        <div><img src="imagens\Não Roa Logo temp yellow.png" alt="Não Roa!" class="game-logo"></div>
+    </header>
+
+    <main class="game-container" id="game-slot">
+        <div class="game-placeholder" onclick="loadGame()">
+            <button class="paint-button">JOGAR AGORA</button>
+            <span class="play-text">Clique para iniciar a experiência</span>
+        </div>
+        <button id="fs-btn" class="fullscreen-btn" onclick="toggleFullscreen()" title="Tela Cheia">⛶</button>
+    </main>
+
+    <section class="controls-info">
+        <h3>Como Jogar</h3>
+        <p>Use as setas para mover, mouse para controlar a câmera e M1 para atirar. Derrote os inimigos e chegue ao fim!</p>
+    </section>
+
+    <section class="itch-embed">
+        <h3>Outras Opções</h3>
+        <iframe frameborder="0" src="https://itch.io/embed/4118383?linkback=true&amp;border_width=5&amp;bg_color=f6e842&amp;link_color=000000&amp;border_color=000000" width="560" height="175"><a href="https://gabrielbarrinha.itch.io/no-roa">Não Roa!! by Gabriel Barrinha</a></iframe>
+    </section>
+
+    <footer>
+        &copy; 2026 Gabriel Barrinha. Todos os direitos reservados.
+    </footer>
+
+    <!-- Filtro SVG para efeito de tinta orgânica e fluida -->
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+        <filter id="ink-distort">
+            <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="5" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="80" />
+        </filter>
+    </svg>
+
+    <script>
+        // Sincroniza o som de splash com a animação de entrada
+        document.addEventListener('DOMContentLoaded', () => {
+            const splashAudio = document.getElementById('splash-sound');
+            
+            // Tenta reproduzir o som (pode falhar devido às políticas de autoplay)
+            splashAudio.play().catch(() => {
+                // Caso o navegador bloqueie, o som tocará no primeiro clique do usuário na página
+                window.addEventListener('click', () => {
+                    if (splashAudio.paused) splashAudio.play();
+                }, { once: true });
+            });
+        });
+
+        function toggleFullscreen() {
+            const container = document.getElementById('game-slot');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    console.error(`Erro ao tentar entrar em tela cheia: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Atualiza o ícone do botão quando o estado da tela cheia muda (ex: apertando ESC)
+        document.addEventListener('fullscreenchange', () => {
+            const btn = document.getElementById('fs-btn');
+            btn.innerHTML = document.fullscreenElement ? '❐' : '⛶';
+        });
+
+        function loadGame() {
+            const container = document.getElementById('game-slot');
+            const placeholder = container.querySelector('.game-placeholder');
+            
+            placeholder.style.display = 'none';
+            const iframe = document.createElement('iframe');
+            iframe.src = "jogo/index.html";
+            iframe.title = "Game Play Area";
+            iframe.allowFullscreen = true;
+            container.appendChild(iframe);
+            
+            document.getElementById('fs-btn').style.display = 'flex';
+        }
+    </script>
+
+</body>
+</html>
